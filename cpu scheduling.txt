@@ -1,0 +1,308 @@
+//fcfs
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+    vector<pair<int,int> >v;
+    int n,brust[100];
+    vector<int>st,ft,wt;
+    cin>>n;
+    cout<<"Brust Time            Arrival time\n";
+    for(int i=1;i<=n;i++)
+    {
+        int a,b;
+
+        cin>>a>>b;
+        v.push_back({b,i});
+
+        brust[i]=a;
+    }
+    sort(v.begin(),v.end());
+    int x=0;
+    st.push_back(0);
+    wt.push_back(0);
+    for(auto it=v.begin();it!=v.end();it++)
+    {
+        cout<<it->first<<" "<<it->second<<endl;
+
+        st.push_back(x=x+brust[it->second]);
+        wt.push_back(x-it->first);
+        cout<<x<<endl;
+    }
+    int total_wt=0;
+    for(int i=0;i<n;i++){
+            cout<<wt[i]<<endl;
+        total_wt+=wt[i];
+    }
+
+    cout<<total_wt/n<<endl;
+
+
+}
+
+/*
+6 2
+2 5
+8 1
+3 0
+4 4
+*/
+
+
+
+
+
+
+
+
+
+//sjf
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+    vector<pair<int,int> >v;
+    int n,ttl_tm=0,vis[100];
+    memset(vis,0,sizeof(vis));
+    vector<int>st,ft,wt,arrival,brust,ans;
+    cin>>n;
+    cout<<"Brust Time            Arrival time\n";
+    for(int i=1;i<=n;i++)
+    {
+        int a,b;
+
+        cin>>a>>b;
+        arrival.push_back(b);
+        brust.push_back(a);
+        ttl_tm+=a;
+    }
+    cout<<"ok"<<endl;
+    for(int i=0;i<ttl_tm;)
+    {
+        cout<<i<<" v chos"<<endl;
+        for(int j=0;j<n;j++)
+        {
+            if(arrival[j]<=i)
+            {
+                v.push_back({brust[j],j});
+            }
+        }
+        sort(v.begin(),v.end());
+        for(auto it=v.begin();it!=v.end();it++)
+        {
+            cout<<it->first<<" "<<it->second<<endl;
+            if(!vis[it->second]){
+                ans.push_back(it->second);
+                wt.push_back(i);
+                i+=it->first;
+                vis[it->second]=1;
+                break;
+            }
+
+        }
+        v.clear();
+    }
+    for(int i=0;i<ans.size();i++)
+        cout<<ans[i]<<" ";
+    cout<<endl;
+    for(int i=0;i<wt.size();i++)
+        cout<<wt[i]<<" ";
+}
+
+
+
+
+
+//srtf
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+    int n,total_time=0;
+    cin>>n;
+    vector<pair<int,int>>v;
+    vector<int>st,wt,ans,arrival,brust,remaining;
+
+    for(int i=0;i<n;i++)
+    {
+        int a,b;
+        cin>>a>>b;
+        arrival.push_back(b);
+        brust.push_back(a);
+        remaining.push_back(a);
+        total_time+=a;
+    }
+    for(int i=0;i<total_time;i++)
+    {
+        cout<<i<<" v chos\n";
+        for(int j=0;j<n;j++)
+        {
+            if(arrival[j]<=i)
+            {
+                cout<<j+1<<" "<<remaining[j]<<endl;
+                v.push_back({remaining[j],j});
+            }
+
+        }
+        sort(v.begin(),v.end());
+        cout<<"    v it\n";
+        for(auto it=v.begin();it!=v.end();it++)
+        {
+            cout<<"\t"<<it->second+1<<" "<<it->first<<endl;
+            if(it->first!=0)
+            {
+
+                ans.push_back(it->second);
+                remaining[it->second]--;
+                break;
+            }
+        }
+        v.clear();
+    }
+    cout<<"schedule: ";
+    for(int i=0;i<ans.size();i++)
+        cout<<ans[i]+1<<" ";
+}
+
+/*
+5
+6 2
+2 5
+8 1
+3 0
+4 4
+*/
+
+
+
+
+
+
+
+
+//rr
+
+#include<bits/stdc++.h>
+using namespace std;
+int main(){
+    int n,a,b,tq,vis[100];
+    memset(vis,0,sizeof(vis));
+    vector<int>arrival,brust,ans,remaining,wt;
+    vector<pair<int,int>>v;
+    queue<int>q;
+
+    cin>>n>>tq;
+    for(int i=0;i<n;i++)
+    {
+        cin>>a>>b;
+        arrival.push_back(b);
+        remaining.push_back(a);
+        brust.push_back(a);
+        v.push_back({b,i});
+    }
+    sort(v.begin(),v.end());
+    auto it = v.begin();
+    q.push(it->second);
+    cout<<it->second<<endl;
+    int i=0;
+    cout<<"start"<<endl;
+    int c=0;
+    vis[it->second]=1;
+    while(!q.empty())
+    {
+
+        int x=q.front();
+        cout<<"loop p"<<x<<endl;
+        q.pop();
+        ans.push_back(x);
+        if(remaining[x]>tq)
+        {
+            remaining[x]-=tq;i+=tq;wt.push_back(tq);
+        }
+        else{
+            i+=remaining[x];
+            wt.push_back(remaining[x]);
+            remaining[x]=0;
+        }
+
+        for(auto it=v.begin();it!=v.end();it++)
+        {
+            int p=it->second;
+            if(!vis[p] && arrival[p]<=i)
+            {
+                cout<<p<<endl;
+                q.push(p);
+                vis[p]=1;
+            }
+        }
+
+
+
+        if(remaining[x]){
+            cout<<x<<endl;
+            q.push(x);
+        }
+
+    }
+
+    for(int i=0;i<ans.size();i++)
+    {
+        cout<<"p"<<ans[i]+1<<" "<<wt[i]<<"\n";
+    }
+
+
+}
+
+/*
+4 2
+5 0
+4 1
+2 2
+1 4
+*/
+
+
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+#define M 3
+#define K 2
+#define N 3
+#define NUM_THREADS 9
+
+int A [M][K] = { {1,4}, {2,5}, {3,6} };
+int B [K][N] = { {8,7,6}, {5,4,3} };
+int C [M][N];
+
+struct data{
+    int i,j;
+};
+
+struct data dar[]
+
+void *runner(void *param)
+{
+    
+}
+
+int main()
+{
+    pthread_t tid[NUM_THREADS];
+    int count = 0;
+
+	int i,j,rc;
+    for(int i=0;i<M;i++)
+    {
+        for(int j=0;j<N;j++)
+        {
+            dar[count].i = i;
+			dar[count].j = j;
+			rc=pthread_create(&tid[])
+        }
+    }
+    
+    
+}
+
