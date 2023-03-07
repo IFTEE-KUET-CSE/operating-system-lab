@@ -1,0 +1,17 @@
+library     [ ]*[#][g][e][t][*][<][ ]*[a-zA-Z]+[][>]
+%%
+{library}   { printf("library added\n");}
+[ ]*	    			
+[\n]*					
+[\t]*
+%%
+int yywrap()
+{
+	return 1;
+}
+int main()
+{
+
+	yylex();
+return 0;
+}
